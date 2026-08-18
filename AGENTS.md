@@ -1,8 +1,18 @@
-# AX7020 Vivado/Vitis 2022.2 开发入口
+# AX7020 Vivado/Vitis 2022.2 Development Guide / 开发入口
+
+This repository targets the AX7020 board, device `xc7z020clg400-2`, and Vivado/Vitis 2022.2. Use `doc/AX7020开发板 IO引脚分配总表.md` as the only source for board-level I/O assignments.
 
 本仓库固定使用 AX7020、器件 `xc7z020clg400-2` 和 Vivado/Vitis 2022.2。板级 IO 只参考 `doc/AX7020开发板 IO引脚分配总表.md`。
 
-## 1. 固定边界
+## English quick reference
+
+- Treat `config.tcl` as the single configuration entry point. The default flow is pure PL; use the scripted Vivado/Vitis flow for PS+PL designs.
+- Keep persistent RTL, constraints, simulation sources, and software in `rtl/`, `sim/`, and `vitis/src/`. Do not hand-edit generated projects, caches, logs, or published artifacts.
+- Use the smallest command that matches the change: `sync` for source-list changes, `sim` for simulation, `synth` or `build` for RTL work, and `all` only for project structure, BD, IP, or PS changes.
+- A successful run must report `SUCCESS:` and `RESULT: status=PASS`; simulation must also report `TEST_PASS`. Builds must be fully routed, pass DRC, and have non-negative setup/hold timing when timed paths exist.
+- Confirm board power, connections, and target files before JTAG, serial, ILA, or QSPI operations. Run QSPI preflight first, preview cleanup before deleting generated files, and enable ILA only when explicitly needed.
+
+## 1. Fixed boundaries / 固定边界
 
 - `config.tcl` 是项目、顶层、TB、纯 PL/PS+PL、并行数、启动模式和 Vitis 名称的唯一配置入口。
 - 默认纯 PL：`use_bd=0`、PS 外设关闭、`boot_mode=none`、ILA 关闭，只发布 bit。
@@ -19,7 +29,7 @@
 | XPR、runs/cache/gen/srcs、Vitis workspace、日志、captures | 可再生，不手改 |
 | bit/XSA/LTX、ELF/BIN、manifests | 脚本发布，不手改 |
 
-## 2. 入口和日常流程
+## 2. Entry points and daily workflow / 入口和日常流程
 
 ```text
 .\scripts\invoke-xilinx.cmd Vivado <step> [参数]
@@ -43,14 +53,14 @@
 
 `synth/build/sim` 会在昂贵步骤前检查工程结构和 fileset 是否同步。`sync` 不处理 BD/IP；结构或 PS/IP 变化必须使用 `all`。`all` 会重建工程和缓存，不用于普通 RTL 迭代。
 
-## 3. 成功标准
+## 3. Success criteria / 成功标准
 
 - 必须同时看到 `SUCCESS:`、`RESULT: status=PASS` 和预期产物；仿真还必须有独立的 `TEST_PASS`。
 - build 必须无 ERROR/FATAL/Critical Warning，设计完全布线，DRC 无 Error，已有时序路径 Setup/Hold 非负。
 - 失败先看启动器摘要，再在对应 `logs/` 中定位第一个真实错误；不要用更重流程掩盖问题。
 - 不手动编辑生成工程、bit/XSA/ELF/BIN/manifest；除非用户要求，不清理生成物。
 
-## 4. 下载、启动和清理
+## 4. Programming, boot, and cleanup / 下载、启动和清理
 
 - 纯 PL 只下载 manifest 绑定的 bit；PS+PL 按 bit → FSBL → ELF 进行 JTAG 下载。
 - JTAG、串口、ILA、QSPI 写入前必须确认供电、连接和目标文件；下载不等于板级功能验收。
