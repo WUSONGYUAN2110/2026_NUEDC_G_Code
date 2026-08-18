@@ -1,0 +1,57 @@
+﻿# AI 工作区元数据
+/.agents/
+/.codex/
+
+# Vivado 生成工程与缓存
+/.Xil/
+/prj/*.xpr
+/prj/*.structure.manifest
+/prj/*.mark_debug.xdc
+/prj/*.ila_debug.xdc
+/prj/*.ila_post.tcl
+/prj/*.cache/
+/prj/*.gen/
+/prj/*.hw/
+/prj/*.incremental/
+/prj/*.ioplanning/
+/prj/*.ip_user_files/
+/prj/*.runs/
+/prj/*.sim/
+/prj/*.srcs/
+/prj/ps7_init*
+/prj/aie_primitive.json
+/prj/*.bit
+/prj/*.xsa
+/prj/*.manifest
+/prj/.*.bit
+/prj/.*.tmp
+/.gen/
+/.srcs/
+/xsim.dir/
+/*.pb
+
+# Vitis 工作区与生成发布物
+/vitis/*
+!/vitis/run.tcl
+!/vitis/program-qspi.ps1
+!/vitis/boot.bif
+!/vitis/src/
+!/vitis/src/**
+/vitis/*.elf
+/vitis/*.bin
+/vitis/*.manifest
+/vitis/boot/
+/vitis/sd_boot/
+
+# ILA 采集与工具日志
+/captures/
+/logs/
+*.jou
+*.log
+*.str
+
+# 临时报告编译文件
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
